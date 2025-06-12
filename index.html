@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CloudDash | SaaS Landing</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #e0f7fa;
+      text-align: center;
+      padding: 50px;
+    }
+    header {
+      margin-bottom: 30px;
+    }
+    h1 {
+      font-size: 2.5em;
+      color: #00796b;
+    }
+    form {
+      display: inline-block;
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    input, button {
+      display: block;
+      width: 300px;
+      padding: 10px;
+      margin: 10px auto;
+      font-size: 1em;
+    }
+    button {
+      background: #00796b;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    button:hover {
+      background: #004d40;
+    }
+    #message {
+      margin-top: 10px;
+      font-weight: bold;
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>CloudDash</h1>
+    <p>The only SaaS dashboard you’ll ever need.</p>
+  </header>
+
+  <section>
+    <form id="signup-form">
+      <input type="text" id="name" placeholder="Your Name" required />
+      <input type="email" id="email" placeholder="Email Address" required />
+      <button type="submit">Sign Up</button>
+    </form>
+    <p id="message"></p>
+  </section>
+
+  <script>
+    document.getElementById('signup-form').addEventListener('submit', async function (e) {
+      e.preventDefault();
+
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+
+      try {
+        const res = await fetch('http://localhost:5000/api/lead', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email }),
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+          window.location.href = 'thank-you.html';
+        } else {
+          document.getElementById('message').innerText = '❌ ' + (data.message || 'Submission failed');
+        }
+      } catch (err) {
+        console.error(err);
+        document.getElementById('message').innerText = '⚠️ Server error. Please try again later.';
+      }
+    });
+  </script>
+</body>
+</html>
